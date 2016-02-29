@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import dto.UnittypeDTO;
 import com.owera.common.db.NoAvailableConnectionException;
 import com.owera.xaps.dbi.Unittype;
 
+@Singleton
 public class UnittypeService {
 
     private

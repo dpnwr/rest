@@ -2,6 +2,9 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# LoginController
+POST    /login                                  controllers.LoginController.authenticate()
+
 # Unittype
 GET     /unittype                               controllers.UnittypeController.listUnittypes
 GET     /unittype/:id                           controllers.UnittypeController.getUnittype(id: Integer)

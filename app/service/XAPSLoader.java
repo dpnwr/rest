@@ -21,6 +21,7 @@ import com.owera.xaps.dbi.XAPS;
  */
 @Singleton
 public class XAPSLoader {
+    private ConnectionProperties connectionProperties;
     private XAPS xaps;
 
     public XAPSLoader() throws SQLException, ClassNotFoundException {
@@ -28,7 +29,7 @@ public class XAPSLoader {
         if (connectionUrl == null) {
             throw new IllegalArgumentException("No xaps.db.url in application properties");
         }
-        ConnectionProperties connectionProperties = new ConnectionProperties();
+        connectionProperties = new ConnectionProperties();
         try {
             connectionProperties.setUrl(connectionUrl.substring(connectionUrl.indexOf("@") + 1));
             connectionProperties.setUser(connectionUrl.substring(0, connectionUrl.indexOf("/")));
@@ -50,5 +51,9 @@ public class XAPSLoader {
 
     public XAPS getXaps() {
         return xaps;
+    }
+
+    public ConnectionProperties getConnectionProperties() {
+        return connectionProperties;
     }
 }

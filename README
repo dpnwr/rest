@@ -14,3 +14,29 @@ and execute:
 `~run`
 
 to enable autoreload of changes.
+
+The service endpoints is protected by the same security system currently in use by FreeACS Web.
+
+To login to the service you must make the following request:
+
+POST http://localhost:9000/login
+Content-Type: application/json
+{
+    "username": "support",
+    "password": "5BDCD3C0D4D24AE3E71B3B452A024C6324C7E4BB"
+}
+
+The password must be sent as SHA1 encoded string of 40 characters. Casing is not important for password.
+
+After successful login, you will be able to call endpoints like:
+
+GET http://localhost:9000/unittype
+
+to list all unittypes
+
+or
+
+GET http://localhost:9000/unittype/1
+
+to get details about one unittype
+where 1 is the id property of the unittype.
