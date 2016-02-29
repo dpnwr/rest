@@ -8,43 +8,44 @@ import com.owera.xaps.dbi.Unittype.ProvisioningProtocol;
 import play.libs.F;
 
 public class UnittypeDTO {
-	private Integer id;
-	@NotNull
-	private String name;
-	@NotNull
-	private String vendor;
-	@NotNull
-	private String description;
-	@NotNull
-	private ProvisioningProtocol protocol;
-	
-	public UnittypeDTO() {}
-	
-	public UnittypeDTO(Unittype unittype) {
-		this.id = unittype.getId();
-		this.name = unittype.getName();
-		this.vendor = unittype.getVendor();
-		this.description = unittype.getDescription();
-		this.protocol = unittype.getProtocol();
-	}
-	
-	public Integer getId() {
-		return id;
-	}
+    private Integer id;
+    @NotNull
+    private String name;
+    @NotNull
+    private String vendor;
+    @NotNull
+    private String description;
+    @NotNull
+    private ProvisioningProtocol protocol;
 
-	public String getName() {
-		return name;
-	}
+    public UnittypeDTO() {
+    }
 
-	public String getVendor() {
-		return vendor;
-	}
+    public UnittypeDTO(Unittype unittype) {
+        this.id = unittype.getId();
+        this.name = unittype.getName();
+        this.vendor = unittype.getVendor();
+        this.description = unittype.getDescription();
+        this.protocol = unittype.getProtocol();
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public ProvisioningProtocol getProtocol() {
-		return protocol;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public ProvisioningProtocol getProtocol() {
+        return protocol;
+    }
 }
