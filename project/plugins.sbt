@@ -1,6 +1,12 @@
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.6")
 
+resolvers += Resolver.typesafeRepo("releases")
+
+resolvers += Resolver.sbtPluginRepo("snapshots")
+
+addSbtPlugin("com.github.play2war" % "play2-war-plugin" % "1.4-beta1")
+
 // Web plugins
 addSbtPlugin("com.typesafe.sbt" % "sbt-coffeescript" % "1.0.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.0.6")
