@@ -8,16 +8,22 @@ import java.sql.SQLException;
 
 @Singleton
 public class UserService {
+
+    private
     @Inject
-    private XAPSLoader xapsLoader;
+    XAPSLoader xapsLoader;
 
-    private Users users;
+    private Users users = null;
 
-    public UserService() throws SQLException {
-        users = new Users(xapsLoader.getConnectionProperties());
+    public UserService() {
     }
 
-    public Users getUsers() {
+    public Users getUsers() throws SQLException {
+        synchronized (this) {
+            if (users == null) {
+                users = new Users(xapsLoader.getConnectionProperties());
+            }
+        }
         return users;
     }
 }

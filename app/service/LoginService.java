@@ -12,9 +12,10 @@ import java.sql.SQLException;
 
 @Singleton
 public class LoginService {
-
+    
+    private
     @Inject
-    private UserService userService;
+    UserService userService;
 
     public WebUser authenticateUser(LoginDTO login) throws SQLException {
         final WebUser dbUser;
