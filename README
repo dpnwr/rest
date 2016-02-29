@@ -1,0 +1,16 @@
+This is your new Play application
+=================================
+
+This file will be packaged with your application, when using `activator dist`.
+
+Run this project with
+
+`activator run`
+
+Or enter interactive console with `activator`
+
+and execute:
+
+`~run`
+
+to enable autoreload of changes.
