@@ -14,14 +14,13 @@ import java.sql.SQLException;
 public class LoginService {
 
     @Inject
-    private XAPSLoader xapsLoader;
+    private UserService userService;
 
     public WebUser authenticateUser(LoginDTO login) throws SQLException {
         final WebUser dbUser;
-        Users users = new Users(xapsLoader.getConnectionProperties());
         String username = login.username;
         String password = login.password;
-        User userObject = users.getUnprotected(username);
+        User userObject = userService.getUsers().getUnprotected(username);
         if (userObject != null) {
             Logger.debug("Password from database [" + userObject.getSecret().toUpperCase() + "]");
             Logger.debug("Password from user     [" + password.toUpperCase() + "]");
@@ -33,7 +32,7 @@ public class LoginService {
             dbUser = new WebUser(userObject, authenticated);
         } else {
             Logger.warn("Did not find user with name " + username);
-            dbUser = new WebUser(userObject, false);
+            dbUser = new WebUser(null, false);
         }
         return dbUser;
     }
