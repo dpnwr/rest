@@ -66,9 +66,7 @@ public class SessionCache {
     }
 
     public static XAPS getXAPS(String sessionId) {
-        if (cache.get(key(sessionId, "dbi")) != null)
-            return ((DBI) cache.get(key(sessionId, "dbi")).getObject()).getXaps();
-        return null;
+        return getDBI(sessionId).getXaps();
     }
 
     public static void putUnit(String sessionId, Unit unit) {

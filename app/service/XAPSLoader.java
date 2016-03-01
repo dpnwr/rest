@@ -41,14 +41,6 @@ public class XAPSLoader {
         return connectionProperties;
     }
 
-    /**
-     * Gets the dBI.
-     *
-     * @param sessionId the session id
-     * @return the dBI
-     * @throws SQLException the sQL exception
-     * @throws NoAvailableConnectionException the no available connection exception
-     */
     public DBI getDBI(String sessionId) throws SQLException {
         DBI dbi = SessionCache.getDBI(sessionId);
         try {
@@ -76,14 +68,6 @@ public class XAPSLoader {
         return dbi;
     }
 
-    /**
-     * Gets the xAPS.
-     *
-     * @param sessionId the session id
-     * @return the xAPS
-     * @throws NoAvailableConnectionException the no available connection exception
-     * @throws SQLException the sQL exception
-     */
     public XAPS getXAPS(String sessionId) throws SQLException {
         DBI dbi = getDBI(sessionId);
         if (dbi != null)
@@ -91,23 +75,10 @@ public class XAPSLoader {
         return null;
     }
 
-    /**
-     * Gets the session timeout.
-     *
-     * @return the session timeout
-     */
     public int getSessionTimeout() {
         return Play.application().configuration().getInt("xaps.session.timeout");
     }
 
-    /**
-     * Gets the identity.
-     *
-     * @param sessionId the session id
-     * @return the identity
-     * @throws SQLException the sQL exception
-     * @throws NoAvailableConnectionException the no available connection exception
-     */
     public Identity getIdentity(String sessionId) throws SQLException {
         User user = SessionCache.getSessionData(sessionId).getUser();
         if (user == null)
@@ -115,28 +86,12 @@ public class XAPSLoader {
         return new Identity(SyslogConstants.FACILITY_WEB, Application.class.getPackage().getImplementationVersion(), user);
     }
 
-    /**
-     * Gets the default user.
-     *
-     * @param sessionId the session id
-     * @return the default user
-     * @throws NoAvailableConnectionException
-     * @throws SQLException
-     */
     private User getDefaultUser() throws SQLException {
         Users users = new Users(SessionCache.getXAPSConnectionProperties());
         User user = new User("anonymous", null, null, false, users);
         return user;
     }
 
-    /**
-     * Gets the xAPS unit.
-     *
-     * @param sessionId the session id
-     * @return the xAPS unit
-     * @throws NoAvailableConnectionException the no available connection exception
-     * @throws SQLException the sQL exception
-     */
     public XAPSUnit getXAPSUnit(String sessionId) throws SQLException {
         ConnectionProperties cp = SessionCache.getXAPSConnectionProperties();
         if (cp == null)
