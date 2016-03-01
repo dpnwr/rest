@@ -5,7 +5,6 @@ import cache.SessionData;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.owera.common.db.ConnectionProperties;
-import com.owera.xaps.dbi.DBI;
 import dto.LoginDTO;
 import dto.WebUser;
 import play.libs.Json;
@@ -14,6 +13,9 @@ import play.mvc.Result;
 import service.LoginService;
 import service.XAPSLoader;
 
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 
@@ -25,12 +27,13 @@ public class LoginController extends Controller {
     @Inject
     private XAPSLoader xapsLoader;
 
-    public Result authenticate() throws SQLException, ClassNotFoundException {
+    public Result authenticate() throws SQLException, ClassNotFoundException, NoSuchAlgorithmException {
         JsonNode json = request().body().asJson();
         LoginDTO login = Json.fromJson(json, LoginDTO.class);
         if (!login.isValid()) {
             return unauthorized("Missing username or password");
         } else {
+            login.password = getSHA1(login.password);
             if (SessionCache.getXAPSConnectionProperties() == null) {
                 ConnectionProperties properties = xapsLoader.getConnectionProperties();
                 SessionCache.putXAPSConnectionProperties(properties);
@@ -52,5 +55,10 @@ public class LoginController extends Controller {
                 return unauthorized("Wrong username or password");
             }
         }
+    }
+
+    private String getSHA1(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        return new HexBinaryAdapter().marshal((md.digest(password.getBytes())));
     }
 }
