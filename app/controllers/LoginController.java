@@ -41,12 +41,12 @@ public class LoginController extends Controller {
                 String uuid = session("uuid");
                 if (uuid == null) {
                     uuid = java.util.UUID.randomUUID().toString() + authenticatedUser.getUsername();
-                    session("uuid", uuid);
                 }
                 SessionData sessionData = SessionCache.getSessionData(uuid);
                 sessionData.setUser(authenticatedUser);
                 xapsLoader.getDBI(uuid);
                 session().clear();
+                session("uuid", uuid);
                 session("username", authenticatedUser.getUsername());
                 session("access", authenticatedUser.getAccess());
                 session("admin", authenticatedUser.isAdmin() + "");
