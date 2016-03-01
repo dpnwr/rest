@@ -1,6 +1,6 @@
 package service;
 
-import com.google.inject.Inject;
+import cache.SessionCache;
 import com.google.inject.Singleton;
 import com.owera.xaps.dbi.User;
 import com.owera.xaps.dbi.Users;
@@ -12,16 +12,13 @@ import java.sql.SQLException;
 
 @Singleton
 public class LoginService {
-    
-    private
-    @Inject
-    UserService userService;
 
     public WebUser authenticateUser(LoginDTO login) throws SQLException {
         final WebUser dbUser;
         String username = login.username;
         String password = login.password;
-        User userObject = userService.getUsers().getUnprotected(username);
+        Users users = new Users(SessionCache.getXAPSConnectionProperties());
+        User userObject = users.getUnprotected(username);
         if (userObject != null) {
             Logger.debug("Password from database [" + userObject.getSecret().toUpperCase() + "]");
             Logger.debug("Password from user     [" + password.toUpperCase() + "]");
