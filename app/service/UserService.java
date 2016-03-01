@@ -1,5 +1,6 @@
 package service;
 
+import cache.SessionCache;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.owera.xaps.dbi.Users;
@@ -9,10 +10,6 @@ import java.sql.SQLException;
 @Singleton
 public class UserService {
 
-    private
-    @Inject
-    XAPSLoader xapsLoader;
-
     private Users users = null;
 
     public UserService() {
@@ -21,7 +18,7 @@ public class UserService {
     public Users getUsers() throws SQLException {
         synchronized (this) {
             if (users == null) {
-                users = new Users(xapsLoader.getConnectionProperties());
+                users = new Users(SessionCache.getXAPSConnectionProperties());
             }
         }
         return users;
