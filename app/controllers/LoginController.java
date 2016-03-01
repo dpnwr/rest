@@ -38,10 +38,7 @@ public class LoginController extends Controller {
             }
             WebUser authenticatedUser = loginService.authenticateUser(login);
             if (authenticatedUser.isAuthenticated()) {
-                String uuid = session("uuid");
-                if (uuid == null) {
-                    uuid = java.util.UUID.randomUUID().toString() + authenticatedUser.getUsername();
-                }
+                String uuid = java.util.UUID.randomUUID().toString() + authenticatedUser.getUsername();
                 SessionData sessionData = SessionCache.getSessionData(uuid);
                 sessionData.setUser(authenticatedUser);
                 xapsLoader.getDBI(uuid);
