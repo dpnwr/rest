@@ -2,12 +2,12 @@ package controllers;
 
 import cache.SessionCache;
 import cache.SessionData;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.owera.common.db.ConnectionProperties;
 import dto.LoginDTO;
 import dto.WebUser;
-import play.libs.Json;
+import play.data.Form;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import service.LoginService;
@@ -18,6 +18,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
+import static play.data.Form.form;
+
 
 public class LoginController extends Controller {
 
@@ -27,13 +29,14 @@ public class LoginController extends Controller {
     @Inject
     private XAPSLoader xapsLoader;
 
+    @BodyParser.Of(BodyParser.Json.class)
     public Result authenticate() throws SQLException, ClassNotFoundException, NoSuchAlgorithmException {
-        JsonNode json = request().body().asJson();
-        LoginDTO login = Json.fromJson(json, LoginDTO.class);
-        if (!login.isValid()) {
+        Form<LoginDTO> loginForm = form(LoginDTO.class).bindFromRequest();
+        if (loginForm.hasErrors()) {
             return unauthorized("Missing username or password");
         } else {
-            login.password = getSHA1(login.password);
+            LoginDTO login = loginForm.get();
+            login.password = toSHA1(login.password);
             if (SessionCache.getXAPSConnectionProperties() == null) {
                 ConnectionProperties properties = xapsLoader.getConnectionProperties();
                 SessionCache.putXAPSConnectionProperties(properties);
@@ -57,7 +60,7 @@ public class LoginController extends Controller {
         }
     }
 
-    private String getSHA1(String password) throws NoSuchAlgorithmException {
+    private String toSHA1(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         return new HexBinaryAdapter().marshal((md.digest(password.getBytes())));
     }

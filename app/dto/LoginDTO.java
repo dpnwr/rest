@@ -1,10 +1,10 @@
 package dto;
 
-public class LoginDTO {
-    public String username;
-    public String password;
+import play.data.validation.Constraints;
 
-    public boolean isValid() {
-        return username != null && password != null;
-    }
+public class LoginDTO {
+    @Constraints.Required
+    public String username;
+    @Constraints.Required
+    public String password;
 }

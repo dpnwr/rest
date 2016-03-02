@@ -4,12 +4,15 @@ import java.sql.SQLException;
 
 import com.google.inject.Inject;
 import dto.UnittypeParameterDTO;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import service.UnittypeParameterService;
+
+import static play.data.Form.form;
 
 public class UnittypeParameterController extends Controller {
 
@@ -29,13 +32,21 @@ public class UnittypeParameterController extends Controller {
     @Security.Authenticated(Authenticated.class)
     @BodyParser.Of(BodyParser.Json.class)
     public Result createUnittypeParameter(Integer unittypeId) throws SQLException {
-        return ok(Json.toJson(unittypeParameters.createeUnittypeParameter(session("uuid"), unittypeId, Json.fromJson(request().body().asJson(), UnittypeParameterDTO.class))));
+        Form<UnittypeParameterDTO> form = form(UnittypeParameterDTO.class).bindFromRequest();
+        if (form.hasErrors()) {
+            return badRequest(form.errorsAsJson());
+        }
+        return ok(Json.toJson(unittypeParameters.createeUnittypeParameter(session("uuid"), unittypeId, form.get())));
     }
 
     @Security.Authenticated(Authenticated.class)
     @BodyParser.Of(BodyParser.Json.class)
     public Result updateUnittypeParameter(Integer unittypeId) throws SQLException {
-        return ok(Json.toJson(unittypeParameters.updateUnittypeParameter(session("uuid"), unittypeId, Json.fromJson(request().body().asJson(), UnittypeParameterDTO.class))));
+        Form<UnittypeParameterDTO> form = form(UnittypeParameterDTO.class).bindFromRequest();
+        if (form.hasErrors()) {
+            return badRequest(form.errorsAsJson());
+        }
+        return ok(Json.toJson(unittypeParameters.updateUnittypeParameter(session("uuid"), unittypeId, form.get())));
     }
 
     @Security.Authenticated(Authenticated.class)

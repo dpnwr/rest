@@ -1,14 +1,13 @@
 package dto;
 
-import javax.validation.constraints.NotNull;
-
 import com.owera.xaps.dbi.UnittypeParameter;
+import play.data.validation.Constraints;
 
 public class UnittypeParameterDTO {
     private Integer id;
-    @NotNull
+    @Constraints.Required
     private String name;
-    @NotNull
+    @Constraints.Required
     private String flag;
     private UnittypeParameterValuesDTO values;
 

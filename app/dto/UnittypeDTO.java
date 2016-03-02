@@ -1,21 +1,18 @@
 package dto;
 
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.databind.JsonNode;
 import com.owera.xaps.dbi.Unittype;
 import com.owera.xaps.dbi.Unittype.ProvisioningProtocol;
-import play.libs.F;
+import play.data.validation.Constraints;
 
 public class UnittypeDTO {
     private Integer id;
-    @NotNull
+    @Constraints.Required
     private String name;
-    @NotNull
+    @Constraints.Required
     private String vendor;
-    @NotNull
+    @Constraints.Required
     private String description;
-    @NotNull
+    @Constraints.Required
     private ProvisioningProtocol protocol;
 
     public UnittypeDTO() {

@@ -1,10 +1,10 @@
 package controllers;
 
 import java.sql.SQLException;
-
-import cache.SessionCache;
 import com.google.inject.Inject;
 import dto.UnittypeDTO;
+import play.data.Form;
+import static play.data.Form.*;
 import play.libs.Json;
 import play.mvc.*;
 import service.UnittypeService;
@@ -27,13 +27,21 @@ public class UnittypeController extends Controller {
     @Security.Authenticated(Authenticated.class)
     @BodyParser.Of(BodyParser.Json.class)
     public Result createUnittype() throws SQLException {
-        return ok(Json.toJson(unittypes.createeUnittype(session("uuid"), Json.fromJson(request().body().asJson(), UnittypeDTO.class))));
+        Form<UnittypeDTO> form = form(UnittypeDTO.class).bindFromRequest();
+        if (form.hasErrors()) {
+            return badRequest(form.errorsAsJson());
+        }
+        return ok(Json.toJson(unittypes.createeUnittype(session("uuid"), form.get())));
     }
 
     @Security.Authenticated(Authenticated.class)
     @BodyParser.Of(BodyParser.Json.class)
     public Result updateUnittype() throws SQLException {
-        return ok(Json.toJson(unittypes.updateUnittype(session("uuid"), Json.fromJson(request().body().asJson(), UnittypeDTO.class))));
+        Form<UnittypeDTO> form = form(UnittypeDTO.class).bindFromRequest();
+        if (form.hasErrors()) {
+            return badRequest(form.errorsAsJson());
+        }
+        return ok(Json.toJson(unittypes.updateUnittype(session("uuid"), form.get())));
     }
 
     @Security.Authenticated(Authenticated.class)
