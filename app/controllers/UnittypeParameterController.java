@@ -21,7 +21,11 @@ public class UnittypeParameterController extends Controller {
 
     @Security.Authenticated(Authenticated.class)
     public Result getUnittypeParameter(Integer unittypeId, Integer paramId) {
-        return ok(Json.toJson(unittypeParameters.getUnittypeParameter(session("uuid"), unittypeId, paramId)));
+        UnittypeParameterDTO unittypeParameter = unittypeParameters.getUnittypeParameter(session("uuid"), unittypeId, paramId);
+        if (unittypeParameter == null) {
+            return notFound("No such unittypeParameterId: " + paramId);
+        }
+        return ok(Json.toJson(unittypeParameter));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -46,7 +50,12 @@ public class UnittypeParameterController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        return ok(Json.toJson(unittypeParameters.updateUnittypeParameter(session("uuid"), unittypeId, form.get())));
+        UnittypeParameterDTO paramObject = form.get();
+        UnittypeParameterDTO unittypeParameter = unittypeParameters.updateUnittypeParameter(session("uuid"), unittypeId, paramObject);
+        if (unittypeParameter == null) {
+            return notFound("No such unittypeParameterId: " + paramObject.getId());
+        }
+        return ok(Json.toJson(unittypeParameter));
     }
 
     @Security.Authenticated(Authenticated.class)

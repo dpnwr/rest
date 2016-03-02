@@ -13,6 +13,7 @@ import service.ProfileService;
 import service.UnitService;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static play.data.Form.form;
 
@@ -23,17 +24,23 @@ public class UnitController extends Controller {
 
     @Security.Authenticated(Authenticated.class)
     public Result getUnit(Integer unittypeId, Integer profileId, String unitId) throws SQLException {
-        return ok(Json.toJson(profiles.getUnit(session("uuid"), unittypeId, profileId, unitId)));
+        UnitDTO unit = profiles.getUnit(session("uuid"), unittypeId, profileId, unitId);
+        if (unit == null) {
+            return notFound("No such unitId: " + unitId);
+        }
+        return ok(Json.toJson(unit));
     }
 
     @Security.Authenticated(Authenticated.class)
     public Result searchUnits(Integer unittypeId, Integer profileId, String searchTerms) throws SQLException {
-        return ok(Json.toJson(profiles.searchForUnits(session("uuid"), unittypeId, profileId, searchTerms)));
+        UnitDTO[] units = profiles.searchForUnits(session("uuid"), unittypeId, profileId, searchTerms);
+        return ok(Json.toJson(units));
     }
 
     @Security.Authenticated(Authenticated.class)
     public Result createUnit(Integer unittypeId, Integer profileId, String unitId) throws SQLException {
-        return ok(Json.toJson(profiles.createUnit(session("uuid"), unitId, profileId)));
+        UnitDTO unit = profiles.createUnit(session("uuid"), unitId, profileId);
+        return ok(Json.toJson(unit));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -43,7 +50,8 @@ public class UnitController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        return ok(Json.toJson(profiles.updateUnit(session("uuid"), form.get(), unittypeId, profileId)));
+        UnitDTO unit = profiles.updateUnit(session("uuid"), form.get(), unittypeId, profileId);
+        return ok(Json.toJson(unit));
     }
 
     @Security.Authenticated(Authenticated.class)

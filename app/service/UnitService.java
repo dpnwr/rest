@@ -21,7 +21,11 @@ public class UnitService {
     public UnitDTO getUnit(String uuid, Integer unittypeId, Integer profileId, String unitId) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         XAPSUnit unitService = getXapsUnit(xaps);
-        return new UnitDTO(unitService.getUnitById(unitId));
+        Unit unit = unitService.getUnitById(unitId);
+        if (unit != null) {
+            return new UnitDTO(unit);
+        }
+        return null;
     }
 
     public UnitDTO[] searchForUnits(String uuid, Integer unittypeId, Integer profileId, String searchTerms) throws SQLException {

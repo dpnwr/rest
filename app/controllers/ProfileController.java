@@ -19,7 +19,11 @@ public class ProfileController extends Controller {
 
     @Security.Authenticated(Authenticated.class)
     public Result getProfile(Integer unittypeId, Integer profileId) {
-        return ok(Json.toJson(profiles.getProfile(session("uuid"), profileId, unittypeId)));
+        ProfileDTO profile = profiles.getProfile(session("uuid"), profileId, unittypeId);
+        if (profile == null) {
+            return notFound("No such profileId: " + profileId);
+        }
+        return ok(Json.toJson(profile));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -53,7 +57,11 @@ public class ProfileController extends Controller {
         if (profileDTO.getId() == null) {
             return badRequest("Missing profile Id");
         }
-        return ok(Json.toJson(profiles.updateProfile(session("uuid"), profileDTO, unittypeId)));
+        ProfileDTO profile = profiles.updateProfile(session("uuid"), profileDTO, unittypeId);
+        if (profile == null) {
+            return notFound("No such profileId: " + profileDTO.getId());
+        }
+        return ok(Json.toJson(profile));
     }
 
     @Security.Authenticated(Authenticated.class)

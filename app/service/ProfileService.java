@@ -16,7 +16,11 @@ public class ProfileService {
 
     public ProfileDTO getProfile(String uuid, Integer id, Integer unittypeId) {
         XAPS xaps = SessionCache.getXAPS(uuid);
-        return new ProfileDTO(xaps.getUnittype(unittypeId).getProfiles().getById(id));
+        Profile profile = xaps.getUnittype(unittypeId).getProfiles().getById(id);
+        if (profile != null) {
+            return new ProfileDTO(profile);
+        }
+        return null;
     }
 
     public ProfileDTO[] getProfiles(String uuid, Integer unittypeId) {
@@ -32,9 +36,12 @@ public class ProfileService {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype unittype = xaps.getUnittype(unittypeId);
         Profile toUpdate = xaps.getProfile(profile.getId());
-        toUpdate.setName(profile.getName());
-        unittype.getProfiles().addOrChangeProfile(toUpdate, xaps);
-        return new ProfileDTO(toUpdate);
+        if (toUpdate != null) {
+            toUpdate.setName(profile.getName());
+            unittype.getProfiles().addOrChangeProfile(toUpdate, xaps);
+            return new ProfileDTO(toUpdate);
+        }
+        return null;
     }
 
     public boolean profileExists(String uuid, Integer unittypeId, String profileName) {

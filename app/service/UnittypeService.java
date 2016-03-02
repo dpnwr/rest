@@ -15,7 +15,11 @@ public class UnittypeService {
 
     public UnittypeDTO getUnittype(String uuid, Integer id) {
         XAPS xaps = SessionCache.getXAPS(uuid);
-        return new UnittypeDTO(xaps.getUnittype(id));
+        Unittype unittype = xaps.getUnittype(id);
+        if (unittype != null) {
+            return new UnittypeDTO(unittype);
+        }
+        return null;
     }
 
     public UnittypeDTO[] getUnittypes(String uuid) {
@@ -30,12 +34,15 @@ public class UnittypeService {
     public UnittypeDTO updateUnittype(String uuid, UnittypeDTO unittype) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype ut = xaps.getUnittype(unittype.getId());
-        ut.setDescription(unittype.getDescription());
-        ut.setName(unittype.getName());
-        ut.setVendor(unittype.getVendor());
-        ut.setProtocol(unittype.getProtocol());
-        xaps.getUnittypes().addOrChangeUnittype(ut, xaps);
-        return new UnittypeDTO(ut);
+        if (ut != null) {
+            ut.setDescription(unittype.getDescription());
+            ut.setName(unittype.getName());
+            ut.setVendor(unittype.getVendor());
+            ut.setProtocol(unittype.getProtocol());
+            xaps.getUnittypes().addOrChangeUnittype(ut, xaps);
+            return new UnittypeDTO(ut);
+        }
+        return null;
     }
 
     public UnittypeDTO createeUnittype(String uuid, UnittypeDTO unittype) throws SQLException {

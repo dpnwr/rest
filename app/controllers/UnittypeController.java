@@ -19,7 +19,11 @@ public class UnittypeController extends Controller {
 
     @Security.Authenticated(Authenticated.class)
     public Result getUnittype(Integer id) {
-        return ok(Json.toJson(unittypes.getUnittype(session("uuid"), id)));
+        UnittypeDTO unittype = unittypes.getUnittype(session("uuid"), id);
+        if (unittype == null) {
+            return notFound("No such unittypeId: " + id);
+        }
+        return ok(Json.toJson(unittype));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -44,7 +48,12 @@ public class UnittypeController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        return ok(Json.toJson(unittypes.updateUnittype(session("uuid"), form.get())));
+        UnittypeDTO formObject = form.get();
+        UnittypeDTO unittype = unittypes.updateUnittype(session("uuid"), formObject);
+        if (unittype == null) {
+            return notFound("No such unittypeId: " + formObject.getId());
+        }
+        return ok(Json.toJson(unittype));
     }
 
     @Security.Authenticated(Authenticated.class)

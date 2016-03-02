@@ -7,6 +7,7 @@ import java.util.List;
 import cache.SessionCache;
 import com.google.inject.Singleton;
 import com.owera.xaps.dbi.*;
+import dto.UnittypeDTO;
 import dto.UnittypeParameterDTO;
 
 @Singleton
@@ -14,7 +15,11 @@ public class UnittypeParameterService {
 
     public UnittypeParameterDTO getUnittypeParameter(String uuid, Integer unittypeId, Integer paramId) {
         XAPS xaps = SessionCache.getXAPS(uuid);
-        return new UnittypeParameterDTO(xaps.getUnittypes().getById(unittypeId).getUnittypeParameters().getById(paramId));
+        UnittypeParameter param = xaps.getUnittypes().getById(unittypeId).getUnittypeParameters().getById(paramId);
+        if (param != null) {
+            return new UnittypeParameterDTO(param);
+        }
+        return null;
     }
 
     public UnittypeParameterDTO[] getUnittypeParameters(String uuid, Integer unittypeId) {
@@ -40,16 +45,19 @@ public class UnittypeParameterService {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype unittype = xaps.getUnittype(unittypeId);
         UnittypeParameter unittypeParameter = unittype.getUnittypeParameters().getById(param.getId());
-        unittypeParameter.setName(param.getName());
-        unittypeParameter.setFlag(new UnittypeParameterFlag(param.getFlag()));
-        if (param.getValues() != null) {
-            UnittypeParameterValues values = new UnittypeParameterValues();
-            values.setPattern(param.getValues().getPattern());
-            values.setValues(param.getValues().getValues());
-            unittypeParameter.setValues(values);
+        if (unittypeParameter != null) {
+            unittypeParameter.setName(param.getName());
+            unittypeParameter.setFlag(new UnittypeParameterFlag(param.getFlag()));
+            if (param.getValues() != null) {
+                UnittypeParameterValues values = new UnittypeParameterValues();
+                values.setPattern(param.getValues().getPattern());
+                values.setValues(param.getValues().getValues());
+                unittypeParameter.setValues(values);
+            }
+            unittype.getUnittypeParameters().addOrChangeUnittypeParameter(unittypeParameter, xaps);
+            return new UnittypeParameterDTO(unittypeParameter);
         }
-        unittype.getUnittypeParameters().addOrChangeUnittypeParameter(unittypeParameter, xaps);
-        return new UnittypeParameterDTO(unittypeParameter);
+        return null;
     }
 
     public void deleteUnittypeParameter(String uuid, Integer unittypeId, Integer paramId) throws SQLException {
