@@ -37,6 +37,12 @@ public class ProfileService {
         return new ProfileDTO(toUpdate);
     }
 
+    public boolean profileExists(String uuid, Integer unittypeId, String profileName) {
+        XAPS xaps = SessionCache.getXAPS(uuid);
+        Unittype unittype = xaps.getUnittype(unittypeId);
+        return null != xaps.getProfile(unittype.getName(), profileName);
+    }
+
     public ProfileDTO createeProfile(String uuid, ProfileDTO profile, Integer unittypeId) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype unittype = xaps.getUnittype(unittypeId);

@@ -4,10 +4,8 @@ import com.google.inject.Inject;
 import dto.ProfileDTO;
 import play.data.Form;
 import play.libs.Json;
-import play.mvc.BodyParser;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Security;
+
+import play.mvc.*;
 import service.ProfileService;
 
 import java.sql.SQLException;
@@ -36,7 +34,12 @@ public class ProfileController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        return ok(Json.toJson(profiles.createeProfile(session("uuid"), form.get(), unittypeId)));
+        ProfileDTO profileDTO = form.get();
+        String uuid = session("uuid");
+        if (profiles.profileExists(uuid, unittypeId, profileDTO.getName())) {
+            return status(Http.Status.CONFLICT, "Profile exists");
+        }
+        return ok(Json.toJson(profiles.createeProfile(uuid, profileDTO, unittypeId)));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -46,7 +49,11 @@ public class ProfileController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        return ok(Json.toJson(profiles.updateProfile(session("uuid"), form.get(), unittypeId)));
+        ProfileDTO profileDTO = form.get();
+        if (profileDTO.getId() == null) {
+            return badRequest("Missing profile Id");
+        }
+        return ok(Json.toJson(profiles.updateProfile(session("uuid"), profileDTO, unittypeId)));
     }
 
     @Security.Authenticated(Authenticated.class)
