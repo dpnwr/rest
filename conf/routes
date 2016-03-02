@@ -13,25 +13,25 @@ PUT     /unittype                               controllers.UnittypeController.u
 DELETE  /unittype/:id                           controllers.UnittypeController.deleteUnittype(id: Integer)
 
 # Unittype parameter
-GET     /unittype/:utId/param                   controllers.UnittypeParameterController.listUnittypeParameters(utId: Integer)
-GET     /unittype/:utId/param/:id               controllers.UnittypeParameterController.getUnittypeParameter(utId: Integer, id: Integer)
-POST    /unittype/:utId/param                   controllers.UnittypeParameterController.createUnittypeParameter(utId: Integer)
-PUT     /unittype/:utId/param                   controllers.UnittypeParameterController.updateUnittypeParameter(utId: Integer)
-DELETE  /unittype/:utId/param/:id               controllers.UnittypeParameterController.deleteUnittypeParameter(utId: Integer, id: Integer)
+GET     /unittype/:uId/param                   controllers.UnittypeParameterController.listUnittypeParameters(uId: Integer)
+GET     /unittype/:uId/param/:id               controllers.UnittypeParameterController.getUnittypeParameter(uId: Integer, id: Integer)
+POST    /unittype/:uId/param                   controllers.UnittypeParameterController.createUnittypeParameter(uId: Integer)
+PUT     /unittype/:uId/param                   controllers.UnittypeParameterController.updateUnittypeParameter(uId: Integer)
+DELETE  /unittype/:uId/param/:id               controllers.UnittypeParameterController.deleteUnittypeParameter(uId: Integer, id: Integer)
 
 # Profile
-GET     /unittype/:utId/profile                 controllers.ProfileController.listProfiles(utId: Integer)
-GET     /unittype/:utId/profile/:id             controllers.ProfileController.getProfile(utId: Integer, id: Integer)
-POST    /unittype/:utId/profile                 controllers.ProfileController.createProfile(utId: Integer)
-PUT     /unittype/:utId/profile                 controllers.ProfileController.updateProfile(utId: Integer)
-DELETE  /unittype/:utId/profile/:id             controllers.ProfileController.deleteProfile(utId: Integer, id: Integer)
+GET     /unittype/:uId/profile                 controllers.ProfileController.listProfiles(uId: Integer)
+GET     /unittype/:uId/profile/:id             controllers.ProfileController.getProfile(uId: Integer, id: Integer)
+POST    /unittype/:uId/profile                 controllers.ProfileController.createProfile(uId: Integer)
+PUT     /unittype/:uId/profile                 controllers.ProfileController.updateProfile(uId: Integer)
+DELETE  /unittype/:uId/profile/:id             controllers.ProfileController.deleteProfile(uId: Integer, id: Integer)
 
 # Unit
-GET     /unittype/:utId/profile/:pId/unit       controllers.UnitController.searchUnits(utId: Integer, pId: Integer, searchTerms: String)
-GET     /unittype/:utId/profile/:pId/unit/:id   controllers.UnitController.getUnit(utId: Integer, pId: Integer, id: String)
-POST    /unittype/:utId/profile/:pId/unit/:id   controllers.UnitController.createUnit(utId: Integer, pId: Integer, id: String)
-PUT     /unittype/:utId/profile/:pId/unit       controllers.UnitController.updateUnit(utId: Integer, pId: Integer)
-DELETE  /unittype/:utId/profile/:pId/unit/:id   controllers.UnitController.deleteUnit(utId: Integer, pId: Integer, id: String)
+GET     /unittype/:uId/profile/:pId/unit/s/:t  controllers.UnitController.searchUnits(uId: Integer, pId: Integer, t: String)
+GET     /unittype/:uId/profile/:pId/unit/:id   controllers.UnitController.getUnit(uId: Integer, pId: Integer, id: String)
+POST    /unittype/:uId/profile/:pId/unit/:id   controllers.UnitController.createUnit(uId: Integer, pId: Integer, id: String)
+PUT     /unittype/:uId/profile/:pId/unit       controllers.UnitController.updateUnit(uId: Integer, pId: Integer)
+DELETE  /unittype/:uId/profile/:pId/unit/:id   controllers.UnitController.deleteUnit(uId: Integer, pId: Integer, id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
