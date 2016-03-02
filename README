@@ -22,11 +22,9 @@ To login to the service you must make the following request:
 POST http://localhost:9000/login
 Content-Type: application/json
 {
-    "username": "support",
-    "password": "5BDCD3C0D4D24AE3E71B3B452A024C6324C7E4BB"
+    "username": "admin",
+    "password": "xaps"
 }
-
-The password must be sent as SHA1 encoded string of 40 characters. Casing is not important for password.
 
 After successful login, you will be able to call endpoints like:
 
