@@ -31,7 +31,7 @@ public class UnittypeParameterService {
     public UnittypeParameterDTO createeUnittypeParameter(String uuid, Integer unittypeId, UnittypeParameterDTO unittypeParam) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype unittype = xaps.getUnittype(unittypeId);
-        UnittypeParameter unittypeParameter = new UnittypeParameter(unittype, unittypeParam.name, new UnittypeParameterFlag(unittypeParam.flag));
+        UnittypeParameter unittypeParameter = new UnittypeParameter(unittype, unittypeParam.getName(), new UnittypeParameterFlag(unittypeParam.getFlag()));
         unittype.getUnittypeParameters().addOrChangeUnittypeParameter(unittypeParameter, xaps);
         return new UnittypeParameterDTO(unittypeParameter);
     }
@@ -39,13 +39,13 @@ public class UnittypeParameterService {
     public UnittypeParameterDTO updateUnittypeParameter(String uuid, Integer unittypeId, UnittypeParameterDTO param) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype unittype = xaps.getUnittype(unittypeId);
-        UnittypeParameter unittypeParameter = unittype.getUnittypeParameters().getById(param.id);
-        unittypeParameter.setName(param.name);
-        unittypeParameter.setFlag(new UnittypeParameterFlag(param.flag));
-        if (param.values != null) {
+        UnittypeParameter unittypeParameter = unittype.getUnittypeParameters().getById(param.getId());
+        unittypeParameter.setName(param.getName());
+        unittypeParameter.setFlag(new UnittypeParameterFlag(param.getFlag()));
+        if (param.getValues() != null) {
             UnittypeParameterValues values = new UnittypeParameterValues();
-            values.setPattern(param.values.pattern);
-            values.setValues(param.values.values);
+            values.setPattern(param.getValues().getPattern());
+            values.setValues(param.getValues().getValues());
             unittypeParameter.setValues(values);
         }
         unittype.getUnittypeParameters().addOrChangeUnittypeParameter(unittypeParameter, xaps);

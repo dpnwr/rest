@@ -36,7 +36,7 @@ public class LoginController extends Controller {
             return unauthorized("Missing username or password");
         } else {
             LoginDTO login = loginForm.get();
-            login.password = toSHA1(login.password);
+            login.setPassword(toSHA1(login.getPassword()));
             if (SessionCache.getXAPSConnectionProperties() == null) {
                 ConnectionProperties properties = xapsLoader.getConnectionProperties();
                 SessionCache.putXAPSConnectionProperties(properties);

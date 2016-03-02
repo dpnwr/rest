@@ -6,7 +6,6 @@ import com.owera.xaps.dbi.Profile;
 import com.owera.xaps.dbi.Unittype;
 import com.owera.xaps.dbi.XAPS;
 import dto.ProfileDTO;
-import dto.UnittypeDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,8 +31,8 @@ public class ProfileService {
     public ProfileDTO updateProfile(String uuid, ProfileDTO profile, Integer unittypeId) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype unittype = xaps.getUnittype(unittypeId);
-        Profile toUpdate = xaps.getProfile(profile.id);
-        toUpdate.setName(profile.name);
+        Profile toUpdate = xaps.getProfile(profile.getId());
+        toUpdate.setName(profile.getName());
         unittype.getProfiles().addOrChangeProfile(toUpdate, xaps);
         return new ProfileDTO(toUpdate);
     }
@@ -41,7 +40,7 @@ public class ProfileService {
     public ProfileDTO createeProfile(String uuid, ProfileDTO profile, Integer unittypeId) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Unittype unittype = xaps.getUnittype(unittypeId);
-        Profile toCreate = new Profile(profile.name, unittype);
+        Profile toCreate = new Profile(profile.getName(), unittype);
         unittype.getProfiles().addOrChangeProfile(toCreate, xaps);
         return new ProfileDTO(toCreate);
     }

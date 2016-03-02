@@ -38,9 +38,9 @@ public class UnitService {
     public UnitDTO updateUnit(String uuid, UnitDTO unit, Integer unittypeId, Integer profileId) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         XAPSUnit xapsUnit = getXapsUnit(xaps);
-        Profile oldProfile = xapsUnit.getUnitById(unit.id).getProfile();
-        if (oldProfile.getId().intValue() != unit.profileId.intValue()) {
-            xapsUnit.moveUnits(Collections.singletonList(unit.id), xaps.getProfile(unit.profileId));
+        Profile oldProfile = xapsUnit.getUnitById(unit.getId()).getProfile();
+        if (oldProfile.getId().intValue() != unit.getProfileId().intValue()) {
+            xapsUnit.moveUnits(Collections.singletonList(unit.getId()), xaps.getProfile(unit.getProfileId()));
         }
         return unit;
     }

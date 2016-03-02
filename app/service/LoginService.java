@@ -15,8 +15,8 @@ public class LoginService {
 
     public WebUser authenticateUser(LoginDTO login) throws SQLException {
         final WebUser dbUser;
-        String username = login.username;
-        String password = login.password;
+        String username = login.getUsername();
+        String password = login.getPassword();
         Users users = new Users(SessionCache.getXAPSConnectionProperties());
         User userObject = users.getUnprotected(username);
         if (userObject != null) {

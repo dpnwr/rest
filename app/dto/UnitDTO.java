@@ -5,24 +5,48 @@ import play.data.validation.Constraints;
 
 public class UnitDTO {
     @Constraints.Required
-    public String id;
+    private String id;
     @Constraints.Required
-    public Integer unittypeId;
+    private Integer unittypeId;
     @Constraints.Required
-    public Integer profileId;
+    private Integer profileId;
 
     public UnitDTO() {
     }
 
     public UnitDTO(String id, Integer unittypeId, Integer profileId) {
-        this.id = id;
-        this.profileId = profileId;
-        this.unittypeId = unittypeId;
+        this.setId(id);
+        this.setProfileId(profileId);
+        this.setUnittypeId(unittypeId);
     }
 
     public UnitDTO(Unit unit) {
-        this.id = unit.getId();
-        this.unittypeId = unit.getUnittype().getId();
-        this.profileId = unit.getProfile().getId();
+        this.setId(unit.getId());
+        this.setUnittypeId(unit.getUnittype().getId());
+        this.setProfileId(unit.getProfile().getId());
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Integer getUnittypeId() {
+        return unittypeId;
+    }
+
+    public void setUnittypeId(Integer unittypeId) {
+        this.unittypeId = unittypeId;
+    }
+
+    public Integer getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Integer profileId) {
+        this.profileId = profileId;
     }
 }
