@@ -9,15 +9,29 @@ POST    /login                                  controllers.LoginController.auth
 GET     /unittype                               controllers.UnittypeController.listUnittypes
 GET     /unittype/:id                           controllers.UnittypeController.getUnittype(id: Integer)
 POST    /unittype                               controllers.UnittypeController.createUnittype
-PUT     /unittype                               controllers.UnittypeController.updateUnittype
+PUT     /unittype                               controllers.UnittypeController.updateUnittype()
 DELETE  /unittype/:id                           controllers.UnittypeController.deleteUnittype(id: Integer)
 
 # Unittype parameter
-GET     /unittype/:unittypeId/param             controllers.UnittypeParameterController.listUnittypeParameters(unittypeId: Integer)
-GET     /unittype/:unittypeId/param/:paramId    controllers.UnittypeParameterController.getUnittypeParameter(unittypeId: Integer, paramId: Integer)
-POST    /unittype/:unittypeId/param             controllers.UnittypeParameterController.createUnittypeParameter(unittypeId: Integer)
-PUT     /unittype/:unittypeId/param             controllers.UnittypeParameterController.updateUnittypeParameter(unittypeId: Integer)
-DELETE  /unittype/:unittypeId/param/:paramId    controllers.UnittypeParameterController.deleteUnittypeParameter(unittypeId: Integer, paramId: Integer)
+GET     /unittype/:utId/param                   controllers.UnittypeParameterController.listUnittypeParameters(utId: Integer)
+GET     /unittype/:utId/param/:id               controllers.UnittypeParameterController.getUnittypeParameter(utId: Integer, id: Integer)
+POST    /unittype/:utId/param                   controllers.UnittypeParameterController.createUnittypeParameter(utId: Integer)
+PUT     /unittype/:utId/param                   controllers.UnittypeParameterController.updateUnittypeParameter(utId: Integer)
+DELETE  /unittype/:utId/param/:id               controllers.UnittypeParameterController.deleteUnittypeParameter(utId: Integer, id: Integer)
+
+# Profile
+GET     /unittype/:utId/profile                 controllers.ProfileController.listProfiles(utId: Integer)
+GET     /unittype/:utId/profile/:id             controllers.ProfileController.getProfile(utId: Integer, id: Integer)
+POST    /unittype/:utId/profile                 controllers.ProfileController.createProfile(utId: Integer)
+PUT     /unittype/:utId/profile                 controllers.ProfileController.updateProfile(utId: Integer)
+DELETE  /unittype/:utId/profile/:id             controllers.ProfileController.deleteProfile(utId: Integer, id: Integer)
+
+# Unit
+GET     /unittype/:utId/profile/:pId/unit       controllers.UnitController.searchUnits(utId: Integer, pId: Integer, searchTerms: String)
+GET     /unittype/:utId/profile/:pId/unit/:id   controllers.UnitController.getUnit(utId: Integer, pId: Integer, id: String)
+POST    /unittype/:utId/profile/:pId/unit/:id   controllers.UnitController.createUnit(utId: Integer, pId: Integer, id: String)
+PUT     /unittype/:utId/profile/:pId/unit       controllers.UnitController.updateUnit(utId: Integer, pId: Integer)
+DELETE  /unittype/:utId/profile/:pId/unit/:id   controllers.UnitController.deleteUnit(utId: Integer, pId: Integer, id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
