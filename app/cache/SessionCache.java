@@ -60,13 +60,18 @@ public class SessionCache {
     }
 
     public static DBI getDBI(String sessionId) {
-        if (cache.get(key(sessionId, "dbi")) != null)
+        if (cache.get(key(sessionId, "dbi")) != null) {
             return (DBI) cache.get(key(sessionId, "dbi")).getObject();
+        }
         return null;
     }
 
     public static XAPS getXAPS(String sessionId) {
-        return getDBI(sessionId).getXaps();
+        DBI dbi = getDBI(sessionId);
+        if (dbi == null) {
+            throw new IllegalStateException("No DBI is cached for this sessionId: " + sessionId);
+        }
+        return dbi.getXaps();
     }
 
     public static void putUnit(String sessionId, Unit unit) {
@@ -77,8 +82,9 @@ public class SessionCache {
     }
 
     public static Unit getUnit(String sessionId, String unitId) {
-        if (cache.get(key(sessionId, unitId)) != null)
+        if (cache.get(key(sessionId, unitId)) != null) {
             return (Unit) cache.get(key(sessionId, unitId)).getObject();
+        }
         return null;
     }
 
@@ -97,45 +103,51 @@ public class SessionCache {
     }
 
     public static void putSyslogConnectionProperties(ConnectionProperties props) {
-        if (props == null)
+        if (props == null) {
             cache.remove(key("nokey", "syslogprops"));
-        else
+        } else {
             cache.put(key("nokey", "syslogprops"), new CacheValue(props, Cache.SESSION, Long.MAX_VALUE));
+        }
     }
 
     public static ConnectionProperties getSyslogConnectionProperties() {
         CacheValue cv = cache.get(key("nokey", "syslogprops"));
-        if (cv == null)
+        if (cv == null) {
             return null;
+        }
         return (ConnectionProperties) cv.getObject();
     }
 
     public static void putXAPSConnectionProperties(ConnectionProperties props) {
-        if (props == null)
+        if (props == null) {
             cache.remove(key("nokey", "xapsprops"));
-        else
+        } else {
             cache.put(key("nokey", "xapsprops"), new CacheValue(props, Cache.SESSION, Long.MAX_VALUE));
+        }
     }
 
     public static ConnectionProperties getXAPSConnectionProperties() {
         CacheValue cv = cache.get(key("nokey", "xapsprops"));
-        if (cv == null)
+        if (cv == null) {
             return null;
+        }
         return (ConnectionProperties) cv.getObject();
     }
 
     public static void putSyslogEntries(String sessionId, List<SyslogEntry> entries) {
-        if (entries == null)
+        if (entries == null) {
             cache.remove(key(sessionId, "syslogresults"));
-        else
+        } else {
             cache.put(key(sessionId, "syslogresults"), new CacheValue(entries, Cache.SESSION, SYSLOG_EXPORT_TIMEOUT));
+        }
     }
 
     @SuppressWarnings("unchecked")
     public static List<SyslogEntry> getSyslogEntries(String sessionId) {
         CacheValue cv = cache.get(key(sessionId, "syslogresults"));
-        if (cv == null)
+        if (cv == null) {
             return null;
+        }
         List<SyslogEntry> object = (List<SyslogEntry>) cv.getObject();
         return object;
     }
@@ -164,8 +176,9 @@ public class SessionCache {
     }
 
     public static Report<RecordVoip> convertVoipReport(Report<RecordVoip> report, PeriodType type) {
-        if (type != null && report.getPeriodType().getTypeInt() != type.getTypeInt())
+        if (type != null && report.getPeriodType().getTypeInt() != type.getTypeInt()) {
             report = ReportConverter.convertVoipReport(report, type);
+        }
         return report;
     }
 
@@ -185,8 +198,9 @@ public class SessionCache {
 //	}
 
     public static Report<RecordHardware> convertHardwareReport(Report<RecordHardware> report, PeriodType type) {
-        if (type != null && report.getPeriodType().getTypeInt() != type.getTypeInt())
+        if (type != null && report.getPeriodType().getTypeInt() != type.getTypeInt()) {
             report = ReportConverter.convertHardwareReport(report, type);
+        }
         return report;
     }
 
@@ -213,8 +227,9 @@ public class SessionCache {
     }
 
     public static Report<RecordSyslog> convertSyslogReport(Report<RecordSyslog> report, PeriodType type) {
-        if (type != null && report.getPeriodType().getTypeInt() != type.getTypeInt())
+        if (type != null && report.getPeriodType().getTypeInt() != type.getTypeInt()) {
             report = ReportConverter.convertSyslogReport(report, type);
+        }
         return report;
     }
 

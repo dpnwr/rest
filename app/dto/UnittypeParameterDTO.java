@@ -4,12 +4,12 @@ import com.owera.xaps.dbi.UnittypeParameter;
 import play.data.validation.Constraints;
 
 public class UnittypeParameterDTO {
-    private Integer id;
+    public Integer id;
     @Constraints.Required
-    private String name;
+    public String name;
     @Constraints.Required
-    private String flag;
-    private UnittypeParameterValuesDTO values;
+    public String flag;
+    public UnittypeParameterValuesDTO values;
 
     public UnittypeParameterDTO() {
     }
@@ -22,22 +22,4 @@ public class UnittypeParameterDTO {
             this.values = new UnittypeParameterValuesDTO(param.getValues());
         }
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public UnittypeParameterValuesDTO getValues() {
-        return values;
-    }
-
-
 }

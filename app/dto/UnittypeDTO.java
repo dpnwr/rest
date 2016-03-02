@@ -5,15 +5,15 @@ import com.owera.xaps.dbi.Unittype.ProvisioningProtocol;
 import play.data.validation.Constraints;
 
 public class UnittypeDTO {
-    private Integer id;
+    public Integer id;
     @Constraints.Required
-    private String name;
+    public String name;
     @Constraints.Required
-    private String vendor;
+    public String vendor;
     @Constraints.Required
-    private String description;
+    public String description;
     @Constraints.Required
-    private ProvisioningProtocol protocol;
+    public ProvisioningProtocol protocol;
 
     public UnittypeDTO() {
     }
@@ -24,25 +24,5 @@ public class UnittypeDTO {
         this.vendor = unittype.getVendor();
         this.description = unittype.getDescription();
         this.protocol = unittype.getProtocol();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getVendor() {
-        return vendor;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public ProvisioningProtocol getProtocol() {
-        return protocol;
     }
 }

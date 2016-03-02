@@ -29,17 +29,17 @@ public class UnittypeService {
 
     public UnittypeDTO updateUnittype(String uuid, UnittypeDTO unittype) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
-        Unittype ut = xaps.getUnittype(unittype.getId());
-        ut.setDescription(unittype.getDescription());
-        ut.setName(unittype.getName());
-        ut.setVendor(unittype.getVendor());
-        ut.setProtocol(unittype.getProtocol());
+        Unittype ut = xaps.getUnittype(unittype.id);
+        ut.setDescription(unittype.description);
+        ut.setName(unittype.name);
+        ut.setVendor(unittype.vendor);
+        ut.setProtocol(unittype.protocol);
         xaps.getUnittypes().addOrChangeUnittype(ut, xaps);
         return new UnittypeDTO(ut);
     }
 
     public UnittypeDTO createeUnittype(String uuid, UnittypeDTO unittype) throws SQLException {
-        Unittype ut = new Unittype(unittype.getName(), unittype.getVendor(), unittype.getDescription(), unittype.getProtocol());
+        Unittype ut = new Unittype(unittype.name, unittype.vendor, unittype.description, unittype.protocol);
         XAPS xaps = SessionCache.getXAPS(uuid);
         xaps.getUnittypes().addOrChangeUnittype(ut, xaps);
         return new UnittypeDTO(ut);
