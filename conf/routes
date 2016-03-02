@@ -26,12 +26,19 @@ POST    /unittype/:uId/profile                 controllers.ProfileController.cre
 PUT     /unittype/:uId/profile                 controllers.ProfileController.updateProfile(uId: Integer)
 DELETE  /unittype/:uId/profile/:id             controllers.ProfileController.deleteProfile(uId: Integer, id: Integer)
 
+# Profile parameter
+GET     /profile/:pId/param                    controllers.ProfileParameterController.listProfileParameters(pId: Integer)
+GET     /profile/:pId/param/:id                controllers.ProfileParameterController.getProfileParameter(pId: Integer, id: Integer)
+POST    /profile/:pId/param                    controllers.ProfileParameterController.createProfileParameter(pId: Integer)
+PUT     /profile/:pId/parma                    controllers.ProfileParameterController.updateProfileParameter(pId: Integer)
+DELETE  /profile/:pId/param/:id                controllers.ProfileParameterController.deleteProfileParameter(pId: Integer, id: Integer)
+
 # Unit
-GET     /unittype/:uId/profile/:pId/unit/s/:t  controllers.UnitController.searchUnits(uId: Integer, pId: Integer, t: String)
-GET     /unittype/:uId/profile/:pId/unit/:id   controllers.UnitController.getUnit(uId: Integer, pId: Integer, id: String)
-POST    /unittype/:uId/profile/:pId/unit/:id   controllers.UnitController.createUnit(uId: Integer, pId: Integer, id: String)
-PUT     /unittype/:uId/profile/:pId/unit       controllers.UnitController.updateUnit(uId: Integer, pId: Integer)
-DELETE  /unittype/:uId/profile/:pId/unit/:id   controllers.UnitController.deleteUnit(uId: Integer, pId: Integer, id: String)
+GET     /unit                                  controllers.UnitController.searchUnits
+GET     /unit/:id                              controllers.UnitController.getUnit(id: String)
+POST    /profile/:pId/unit/:id                 controllers.UnitController.createUnit(pId: Integer, id: String)
+PUT     /unit                                  controllers.UnitController.updateUnit()
+DELETE  /unit/:id                              controllers.UnitController.deleteUnit(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)

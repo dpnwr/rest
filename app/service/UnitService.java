@@ -18,7 +18,7 @@ public class UnitService {
         return new XAPSUnit(properties, xaps, syslog);
     }
 
-    public UnitDTO getUnit(String uuid, Integer unittypeId, Integer profileId, String unitId) throws SQLException {
+    public UnitDTO getUnit(String uuid, String unitId) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         XAPSUnit unitService = getXapsUnit(xaps);
         Unit unit = unitService.getUnitById(unitId);
@@ -39,7 +39,7 @@ public class UnitService {
         return units.toArray(new UnitDTO[units.size()]);
     }
 
-    public UnitDTO updateUnit(String uuid, UnitDTO unit, Integer unittypeId, Integer profileId) throws SQLException {
+    public UnitDTO updateUnit(String uuid, UnitDTO unit) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         XAPSUnit xapsUnit = getXapsUnit(xaps);
         Profile oldProfile = xapsUnit.getUnitById(unit.getId()).getProfile();
