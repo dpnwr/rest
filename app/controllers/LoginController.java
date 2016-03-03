@@ -1,7 +1,6 @@
 package controllers;
 
-import cache.SessionCache;
-import cache.SessionData;
+import static cache.SessionCache.*;
 import com.google.inject.Inject;
 import com.owera.common.db.ConnectionProperties;
 import dto.LoginDTO;
@@ -26,9 +25,6 @@ public class LoginController extends Controller {
     @Inject
     private LoginService loginService;
 
-    @Inject
-    private XAPSLoader xapsLoader;
-
     @BodyParser.Of(BodyParser.Json.class)
     public Result authenticate() throws SQLException, ClassNotFoundException, NoSuchAlgorithmException {
         Form<LoginDTO> loginForm = form(LoginDTO.class).bindFromRequest();
@@ -37,17 +33,16 @@ public class LoginController extends Controller {
         } else {
             LoginDTO login = loginForm.get();
             login.setPassword(toSHA1(login.getPassword()));
-            if (SessionCache.getXAPSConnectionProperties() == null) {
-                ConnectionProperties properties = xapsLoader.getConnectionProperties();
-                SessionCache.putXAPSConnectionProperties(properties);
-                SessionCache.putSyslogConnectionProperties(properties);
+            if (getXAPSConnectionProperties() == null) {
+                ConnectionProperties properties = XAPSLoader.getConnectionProperties();
+                putXAPSConnectionProperties(properties);
+                putSyslogConnectionProperties(properties);
             }
             WebUser authenticatedUser = loginService.authenticateUser(login);
             if (authenticatedUser.isAuthenticated()) {
                 String uuid = java.util.UUID.randomUUID().toString() + authenticatedUser.getUsername();
-                SessionData sessionData = SessionCache.getSessionData(uuid);
-                sessionData.setUser(authenticatedUser);
-                xapsLoader.getDBI(uuid);
+                putUser(uuid, authenticatedUser);
+                XAPSLoader.getDBI(uuid);
                 session().clear();
                 session("uuid", uuid);
                 session("username", authenticatedUser.getUsername());
