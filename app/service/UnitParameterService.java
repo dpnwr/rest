@@ -10,6 +10,7 @@ import dto.UnitParameterDTO;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Singleton
 public class UnitParameterService {
@@ -17,7 +18,9 @@ public class UnitParameterService {
     private XAPSLoader xapsLoader;
 
     public UnitParameterDTO getUnitParameter(String uuid, String unitId, Integer paramId) throws SQLException {
-        Unit unit = xapsLoader.getXAPSUnit(uuid).getUnitById(unitId);
+        Unit unit = Optional.of(xapsLoader.getXAPSUnit(uuid))
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"))
+                .getUnitById(unitId);
         UnittypeParameter unittypeParameter = unit.getUnittype().getUnittypeParameters().getById(paramId);
         String unittypeParameterName = unittypeParameter.getName();
         String parameterValue = unit.getParameterValue(unittypeParameterName);
@@ -25,7 +28,8 @@ public class UnitParameterService {
     }
 
     public UnitParameterDTO[] getUnitParameters(String uuid, String unitId) throws SQLException {
-        return xapsLoader.getXAPSUnit(uuid)
+        return Optional.of(xapsLoader.getXAPSUnit(uuid))
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"))
                 .getUnitById(unitId)
                 .getUnitParameters()
                 .values()
@@ -35,7 +39,8 @@ public class UnitParameterService {
     }
 
     public UnitParameterDTO createOrUpdateUnitParameter(String uuid, String unitId, UnitParameterDTO unitParameterDTO) throws SQLException {
-        XAPSUnit xapsUnit = xapsLoader.getXAPSUnit(uuid);
+        XAPSUnit xapsUnit = Optional.of(xapsLoader.getXAPSUnit(uuid))
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"));
         Unit unit = xapsUnit.getUnitById(unitId);
         UnittypeParameter unittypeParameter = unit.getUnittype().getUnittypeParameters().getById(unitParameterDTO.getUnittypeParameterId());
         xapsUnit.addOrChangeUnitParameter(unit, unittypeParameter.getName(), unitParameterDTO.getValue());
@@ -43,7 +48,8 @@ public class UnitParameterService {
     }
 
     public void deleteUnitParameter(String uuid, String unitId, Integer paramId) throws SQLException {
-        XAPSUnit xapsUnit = xapsLoader.getXAPSUnit(uuid);
+        XAPSUnit xapsUnit = Optional.of(xapsLoader.getXAPSUnit(uuid))
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"));
         Unit unit = xapsUnit.getUnitById(unitId);
         UnittypeParameter unittypeParameter = unit.getUnittype().getUnittypeParameters().getById(paramId);
         xapsUnit.deleteUnitParameters(Collections.singletonList(unit.getUnitParameters().get(unittypeParameter.getName())));
