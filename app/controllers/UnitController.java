@@ -48,14 +48,14 @@ public class UnitController extends Controller {
     }
 
     @Security.Authenticated(Authenticated.class)
-    public Result createUnit(Integer profileId, String unitId) throws SQLException {
+    public Result createUnit(String unitId, Integer profileId) throws SQLException {
         UnitDTO unit = unitService.createUnit(session("uuid"), unitId, profileId);
         return ok(Json.toJson(unit));
     }
 
     @Security.Authenticated(Authenticated.class)
     @BodyParser.Of(BodyParser.Json.class)
-    public Result updateUnit() throws SQLException {
+    public Result updateUnit(String unitId) throws SQLException {
         Form<UnitDTO> form = form(UnitDTO.class).bindFromRequest();
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());

@@ -34,8 +34,15 @@ PUT     /profile/:pId/parma                    controllers.ProfileParameterContr
 DELETE  /profile/:pId/param/:id                controllers.ProfileParameterController.deleteProfileParameter(pId: Integer, id: Integer)
 
 # Unit
-GET     /unit                                  controllers.UnitController.searchUnits
+GET     /unit/search                           controllers.UnitController.searchUnits
 GET     /unit/:id                              controllers.UnitController.getUnit(id: String)
-POST    /profile/:pId/unit/:id                 controllers.UnitController.createUnit(pId: Integer, id: String)
-PUT     /unit                                  controllers.UnitController.updateUnit()
+POST    /unit/:id/profile/:pId                 controllers.UnitController.createUnit(id: String, pId: Integer)
+PUT     /unit/:id                              controllers.UnitController.updateUnit(id: String)
 DELETE  /unit/:id                              controllers.UnitController.deleteUnit(id: String)
+
+# Unit parameter
+GET     /unit/:uId/param                       controllers.UnitParameterController.listUnitParameters(uId: String)
+GET     /unit/:uId/param/:id                   controllers.UnitParameterController.getUnitParameter(uId: String, id: Integer)
+POST    /unit/:uId/param                       controllers.UnitParameterController.createOrUpdateUnitParameter(uId: String)
+PUT     /unit/:uId/parma                       controllers.UnitParameterController.createOrUpdateUnitParameter(uId: String)
+DELETE  /unit/:uId/param/:id                   controllers.UnitParameterController.deleteUnitParameter(uId: String, id: Integer)

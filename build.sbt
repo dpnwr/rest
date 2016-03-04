@@ -20,8 +20,6 @@ Play2WarPlugin.play2WarSettings
 
 Play2WarKeys.servletVersion := "3.1"
 
-javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
-
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
