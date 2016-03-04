@@ -1,31 +1,29 @@
 package controllers;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import com.google.inject.Inject;
 import dto.UnittypeParameterDTO;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import service.UnittypeParameterService;
 
 import static play.data.Form.form;
 
-public class UnittypeParameterController extends Controller {
+public class UnittypeParameterController extends BaseController {
 
     @Inject
     private UnittypeParameterService unittypeParameters;
 
     @Security.Authenticated(Authenticated.class)
     public Result getUnittypeParameter(Integer unittypeId, Integer paramId) {
-        UnittypeParameterDTO unittypeParameter = unittypeParameters.getUnittypeParameter(session("uuid"), unittypeId, paramId);
-        if (unittypeParameter == null) {
-            return notFound("No such unittypeParameterId: " + paramId);
-        }
-        return ok(Json.toJson(unittypeParameter));
+        return Optional.ofNullable(unittypeParameters.getUnittypeParameter(session("uuid"), unittypeId, paramId))
+                .map(unittypeParameterDTO -> ok(Json.toJson(unittypeParameterDTO)))
+                .orElse(notFound("No such unittypeParameterId: " + paramId));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -50,12 +48,9 @@ public class UnittypeParameterController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        UnittypeParameterDTO paramObject = form.get();
-        UnittypeParameterDTO unittypeParameter = unittypeParameters.updateUnittypeParameter(session("uuid"), unittypeId, paramObject);
-        if (unittypeParameter == null) {
-            return notFound("No such unittypeParameterId: " + paramObject.getId());
-        }
-        return ok(Json.toJson(unittypeParameter));
+        return Optional.ofNullable(unittypeParameters.updateUnittypeParameter(session("uuid"), unittypeId, form.get()))
+                .map(unittypeParameterDTO -> ok(Json.toJson(unittypeParameterDTO)))
+                .orElse(notFound("No such unittypeParameterId: " + form.get().getId()));
     }
 
     @Security.Authenticated(Authenticated.class)

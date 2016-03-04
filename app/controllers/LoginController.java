@@ -8,7 +8,6 @@ import dto.LoginDTO;
 import dto.WebUser;
 import play.data.Form;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Result;
 import service.LoginService;
 import service.XAPSLoader;
@@ -21,7 +20,7 @@ import java.sql.SQLException;
 import static play.data.Form.form;
 
 
-public class LoginController extends Controller {
+public class LoginController extends BaseController {
 
     @Inject
     private LoginService loginService;

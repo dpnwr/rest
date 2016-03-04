@@ -13,6 +13,7 @@ import service.ProfileParameterService;
 import service.ProfileParameterService;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static play.data.Form.form;
 
@@ -23,11 +24,9 @@ public class ProfileParameterController extends Controller {
 
     @Security.Authenticated(Authenticated.class)
     public Result getProfileParameter(Integer profileId, Integer paramId) {
-        ProfileParameterDTO profileParameter = profileParameters.getProfileParameter(session("uuid"), profileId, paramId);
-        if (profileParameter == null) {
-            return notFound("No such profileParameterId: " + paramId);
-        }
-        return ok(Json.toJson(profileParameter));
+        return Optional.ofNullable(profileParameters.getProfileParameter(session("uuid"), profileId, paramId))
+                .map(profileParameterDTO -> ok(Json.toJson(profileParameterDTO)))
+                .orElse(notFound("No such profileParameterId: " + paramId));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -53,11 +52,9 @@ public class ProfileParameterController extends Controller {
             return badRequest(form.errorsAsJson());
         }
         ProfileParameterDTO paramObject = form.get();
-        ProfileParameterDTO profileParameter = profileParameters.updateProfileParameter(session("uuid"), profileId, paramObject);
-        if (profileParameter == null) {
-            return notFound("No such profileParameterId: " + paramObject.getId());
-        }
-        return ok(Json.toJson(profileParameter));
+        return Optional.ofNullable(profileParameters.updateProfileParameter(session("uuid"), profileId, paramObject))
+                .map(profileParameterDTO -> ok(Json.toJson(profileParameterDTO)))
+                .orElse(notFound("No such profileParameterId: " + paramObject.getId()));
     }
 
     @Security.Authenticated(Authenticated.class)

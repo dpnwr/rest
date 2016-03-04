@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.38"
 
+libraryDependencies += "org.projectlombok" % "lombok" % "1.16.6"
+
 Play2WarPlugin.play2WarSettings
 
 Play2WarKeys.servletVersion := "3.1"

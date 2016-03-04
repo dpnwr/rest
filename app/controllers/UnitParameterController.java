@@ -5,27 +5,25 @@ import dto.UnitParameterDTO;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import service.UnitParameterService;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static play.data.Form.form;
 
-public class UnitParameterController extends Controller {
+public class UnitParameterController extends BaseController {
 
     @Inject
     private UnitParameterService unitParameters;
 
     @Security.Authenticated(Authenticated.class)
     public Result getUnitParameter(String unitId, Integer paramId) throws SQLException {
-        UnitParameterDTO profileParameter = unitParameters.getUnitParameter(session("uuid"), unitId, paramId);
-        if (profileParameter == null) {
-            return notFound("No such profileParameterId: " + paramId);
-        }
-        return ok(Json.toJson(profileParameter));
+        return Optional.ofNullable(unitParameters.getUnitParameter(session("uuid"), unitId, paramId))
+                .map(unitParameterDTO -> ok(Json.toJson(unitParameterDTO)))
+                .orElse(notFound("No such profileParameterId: " + paramId));
     }
 
     @Security.Authenticated(Authenticated.class)

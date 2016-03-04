@@ -2,55 +2,45 @@ package controllers;
 
 import com.google.inject.Inject;
 import dto.UnitDTO;
-import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import service.UnitService;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static play.data.Form.form;
 
-public class UnitController extends Controller {
+public class UnitController extends BaseController {
 
     @Inject
     private UnitService unitService;
 
     @Security.Authenticated(Authenticated.class)
     public Result getUnit(String unitId) throws SQLException {
-        UnitDTO unit = unitService.getUnit(session("uuid"), unitId);
-        if (unit == null) {
-            return notFound("No such unitId: " + unitId);
-        }
-        return ok(Json.toJson(unit));
+        return Optional.ofNullable(unitService.getUnit(session("uuid"), unitId))
+                .map(unitDTO -> ok(Json.toJson(unitDTO)))
+                .orElse(notFound("No such unitId: " + unitId));
     }
 
     @Security.Authenticated(Authenticated.class)
     public Result searchUnits() throws SQLException {
-        Integer unittypeId = getIntegerOrNull(request().getQueryString("unittypeId"));
-        Integer profileId = getIntegerOrNull(request().getQueryString("profileId"));
-        String searchTerms = request().getQueryString("searchTerms");
-        UnitDTO[] units = unitService.searchForUnits(session("uuid"), unittypeId, profileId, searchTerms);
-        return ok(Json.toJson(units));
-    }
-
-    private Integer getIntegerOrNull(String param) {
-        try {
-            return Integer.valueOf(param);
-        } catch (NumberFormatException e) {
-            Logger.warn("Could not make Integer from " + param);
-            return null;
-        }
+        return ok(Json.toJson(unitService.searchForUnits(session("uuid"),
+                getQueryParam("unittypeId").map(Integer::parseInt).orElse(null),
+                getQueryParam("profileId").map(Integer::parseInt).orElse(null),
+                getQueryParam("searchTerms").orElse(null))));
     }
 
     @Security.Authenticated(Authenticated.class)
-    public Result createUnit(String unitId, Integer profileId) throws SQLException {
-        UnitDTO unit = unitService.createUnit(session("uuid"), unitId, profileId);
-        return ok(Json.toJson(unit));
+    public Result createUnit() throws SQLException {
+        Form<UnitDTO> form = form(UnitDTO.class).bindFromRequest();
+        if (form.hasErrors()) {
+            return badRequest(form.errorsAsJson());
+        }
+        return ok(Json.toJson(unitService.createUnit(session("uuid"), form.get())));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -60,8 +50,7 @@ public class UnitController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        UnitDTO unit = unitService.updateUnit(session("uuid"), form.get());
-        return ok(Json.toJson(unit));
+        return ok(Json.toJson(unitService.updateUnit(session("uuid"), form.get())));
     }
 
     @Security.Authenticated(Authenticated.class)

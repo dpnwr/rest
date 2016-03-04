@@ -34,10 +34,10 @@ PUT     /profile/:pId/parma                    controllers.ProfileParameterContr
 DELETE  /profile/:pId/param/:id                controllers.ProfileParameterController.deleteProfileParameter(pId: Integer, id: Integer)
 
 # Unit
-GET     /unit/search                           controllers.UnitController.searchUnits
+GET     /unit                                  controllers.UnitController.searchUnits
 GET     /unit/:id                              controllers.UnitController.getUnit(id: String)
-POST    /unit/:id/profile/:pId                 controllers.UnitController.createUnit(id: String, pId: Integer)
-PUT     /unit/:id                              controllers.UnitController.updateUnit(id: String)
+POST    /unit                                  controllers.UnitController.createUnit
+PUT     /unit                                  controllers.UnitController.updateUnit(id: String)
 DELETE  /unit/:id                              controllers.UnitController.deleteUnit(id: String)
 
 # Unit parameter

@@ -1,6 +1,7 @@
 package controllers;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import com.google.inject.Inject;
 import dto.UnittypeDTO;
@@ -12,18 +13,16 @@ import play.libs.Json;
 import play.mvc.*;
 import service.UnittypeService;
 
-public class UnittypeController extends Controller {
+public class UnittypeController extends BaseController {
 
     @Inject
     private UnittypeService unittypes;
 
     @Security.Authenticated(Authenticated.class)
     public Result getUnittype(Integer id) {
-        UnittypeDTO unittype = unittypes.getUnittype(session("uuid"), id);
-        if (unittype == null) {
-            return notFound("No such unittypeId: " + id);
-        }
-        return ok(Json.toJson(unittype));
+        return Optional.ofNullable(unittypes.getUnittype(session("uuid"), id))
+                .map(unittypeDTO -> ok(Json.toJson(unittypeDTO)))
+                .orElse(notFound("No such unittypeId: " + id));
     }
 
     @Security.Authenticated(Authenticated.class)
@@ -48,12 +47,9 @@ public class UnittypeController extends Controller {
         if (form.hasErrors()) {
             return badRequest(form.errorsAsJson());
         }
-        UnittypeDTO formObject = form.get();
-        UnittypeDTO unittype = unittypes.updateUnittype(session("uuid"), formObject);
-        if (unittype == null) {
-            return notFound("No such unittypeId: " + formObject.getId());
-        }
-        return ok(Json.toJson(unittype));
+        return Optional.ofNullable(unittypes.updateUnittype(session("uuid"), form.get()))
+                .map(unittypeDTO -> ok(Json.toJson(unittypeDTO)))
+                .orElse(notFound("No such unittypeId: " + form.get().getId()));
     }
 
     @Security.Authenticated(Authenticated.class)

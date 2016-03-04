@@ -1,8 +1,12 @@
 package dto;
 
 import com.owera.xaps.dbi.UnittypeParameter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import play.data.validation.Constraints;
 
+@Data
+@NoArgsConstructor
 public class UnittypeParameterDTO {
     private Integer id;
     @Constraints.Required
@@ -11,9 +15,6 @@ public class UnittypeParameterDTO {
     private String flag;
     private UnittypeParameterValuesDTO values;
 
-    public UnittypeParameterDTO() {
-    }
-
     public UnittypeParameterDTO(UnittypeParameter param) {
         this.setId(param.getId());
         this.setName(param.getName());
@@ -21,37 +22,5 @@ public class UnittypeParameterDTO {
         if (param.getValues() != null) {
             this.setValues(new UnittypeParameterValuesDTO(param.getValues()));
         }
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }
-
-    public UnittypeParameterValuesDTO getValues() {
-        return values;
-    }
-
-    public void setValues(UnittypeParameterValuesDTO values) {
-        this.values = values;
     }
 }

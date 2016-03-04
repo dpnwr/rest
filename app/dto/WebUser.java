@@ -2,9 +2,13 @@ package dto;
 
 import com.owera.xaps.dbi.User;
 import com.owera.xaps.dbi.Users;
+import lombok.Getter;
+import lombok.Setter;
 
 public class WebUser extends User {
 
+    @Setter
+    @Getter
     private boolean authenticated = false;
 
     public WebUser(User user, boolean authenticated) {
@@ -19,14 +23,4 @@ public class WebUser extends User {
             return Users.ACCESS_ADMIN;
         return access;
     }
-
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
-
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
-    }
-
-
 }

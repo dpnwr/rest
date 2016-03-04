@@ -4,31 +4,29 @@ import cache.SessionCache;
 import com.google.inject.Singleton;
 import com.owera.xaps.dbi.*;
 import dto.ProfileParameterDTO;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Optional;
+
+import static util.LambdaExceptionUtil.*;
 
 @Singleton
 public class ProfileParameterService {
 
     public ProfileParameterDTO getProfileParameter(String uuid, Integer profileId, Integer paramId) {
-        XAPS xaps = SessionCache.getXAPS(uuid);
-        ProfileParameter param = xaps.getProfile(profileId).getProfileParameters().getById(paramId);
-        if (param != null) {
-            return new ProfileParameterDTO(param);
-        }
-        return null;
+        return Optional.ofNullable(SessionCache.getXAPS(uuid).getProfile(profileId).getProfileParameters().getById(paramId))
+                .map(ProfileParameterDTO::new)
+                .orElse(null);
     }
 
     public ProfileParameterDTO[] getProfileParameters(String uuid, Integer profileId) {
-        List<ProfileParameterDTO> dtoParams = new ArrayList<>();
-        XAPS xaps = SessionCache.getXAPS(uuid);
-        Profile profile = xaps.getProfile(profileId);
-        ProfileParameters params = profile.getProfileParameters();
-        for (ProfileParameter param : params.getProfileParameters()) {
-            dtoParams.add(new ProfileParameterDTO(param));
-        }
-        return dtoParams.toArray(new ProfileParameterDTO[dtoParams.size()]);
+        return Arrays.asList(SessionCache.getXAPS(uuid)
+                .getProfile(profileId)
+                .getProfileParameters().getProfileParameters())
+                .stream()
+                .map(ProfileParameterDTO::new)
+                .toArray(ProfileParameterDTO[]::new);
     }
 
     public ProfileParameterDTO createProfileParameter(String uuid, Integer profileId, ProfileParameterDTO profileParam) throws SQLException {
@@ -44,19 +42,20 @@ public class ProfileParameterService {
     public ProfileParameterDTO updateProfileParameter(String uuid, Integer profileId, ProfileParameterDTO param) throws SQLException {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Profile profile = xaps.getProfile(profileId);
-        ProfileParameter profileParameter = profile.getProfileParameters().getById(param.getId());
-        if (profileParameter != null) {
-            profileParameter.setValue(param.getValue());
-            profile.getProfileParameters().addOrChangeProfileParameter(profileParameter, xaps);
-            return new ProfileParameterDTO(profileParameter);
-        }
-        return null;
+        return Optional.ofNullable(profile.getProfileParameters().getById(param.getId()))
+                .map(rethrowFunction(profileParameter -> {
+                    profileParameter.setValue(param.getValue());
+                    profile.getProfileParameters().addOrChangeProfileParameter(profileParameter, xaps);
+                    return new ProfileParameterDTO(profileParameter);
+                }))
+                .orElseThrow(() -> new IllegalArgumentException("Profile parameter " + param.getId() + " does not exist"));
     }
 
-    public void deleteProfileParameter(String uuid, Integer profileId, Integer paramId) throws SQLException {
+    public void deleteProfileParameter(String uuid, Integer profileId, Integer paramId) {
         XAPS xaps = SessionCache.getXAPS(uuid);
         Profile profile = xaps.getProfile(profileId);
-        ProfileParameter profileParameter = profile.getProfileParameters().getById(paramId);
-        profile.getProfileParameters().deleteProfileParameter(profileParameter, xaps);
+        Optional.ofNullable(profile.getProfileParameters().getById(paramId))
+                .ifPresent(rethrowConsumer(profileParameter ->
+                        profile.getProfileParameters().deleteProfileParameter(profileParameter, xaps)));
     }
 }

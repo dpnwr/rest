@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Optional;
 
+import static util.LambdaExceptionUtil.*;
+
 @Singleton
 public class UnitParameterService {
     @Inject
@@ -42,16 +44,22 @@ public class UnitParameterService {
         XAPSUnit xapsUnit = Optional.of(xapsLoader.getXAPSUnit(uuid))
                 .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"));
         Unit unit = xapsUnit.getUnitById(unitId);
-        UnittypeParameter unittypeParameter = unit.getUnittype().getUnittypeParameters().getById(unitParameterDTO.getUnittypeParameterId());
-        xapsUnit.addOrChangeUnitParameter(unit, unittypeParameter.getName(), unitParameterDTO.getValue());
-        return new UnitParameterDTO(unit.getUnitParameters().get(unittypeParameter.getName()));
+        return Optional.ofNullable(unit.getUnittype().getUnittypeParameters().getById(unitParameterDTO.getUnittypeParameterId()))
+                .map(rethrowFunction(unittypeParameter -> {
+                    xapsUnit.addOrChangeUnitParameter(unit, unittypeParameter.getName(), unitParameterDTO.getValue());
+                    return new UnitParameterDTO(unit.getUnitParameters().get(unittypeParameter.getName()));
+                }))
+                .orElseThrow(() -> new IllegalArgumentException("UnittypeParameter " + unitParameterDTO.getUnittypeParameterId() + " does not exist"));
     }
 
-    public void deleteUnitParameter(String uuid, String unitId, Integer paramId) throws SQLException {
+    public int deleteUnitParameter(String uuid, String unitId, Integer paramId) throws SQLException {
         XAPSUnit xapsUnit = Optional.of(xapsLoader.getXAPSUnit(uuid))
                 .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"));
         Unit unit = xapsUnit.getUnitById(unitId);
-        UnittypeParameter unittypeParameter = unit.getUnittype().getUnittypeParameters().getById(paramId);
-        xapsUnit.deleteUnitParameters(Collections.singletonList(unit.getUnitParameters().get(unittypeParameter.getName())));
+        return Optional.ofNullable(unit.getUnittype().getUnittypeParameters().getById(paramId))
+                .map(rethrowFunction(unittypeParameter ->
+                        xapsUnit.deleteUnitParameters(
+                                Collections.singletonList(unit.getUnitParameters().get(unittypeParameter.getName())))))
+                .orElseThrow(() -> new IllegalArgumentException("UnittypeParameter " + paramId + " does not exist"));
     }
 }
