@@ -7,6 +7,7 @@ import java.util.List;
 import cache.SessionCache;
 import com.google.inject.Singleton;
 import com.owera.xaps.dbi.*;
+import dto.UnittypeDTO;
 import dto.UnittypeParameterDTO;
 
 @Singleton
