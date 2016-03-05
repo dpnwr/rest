@@ -5,11 +5,15 @@ import com.google.inject.Singleton;
 import com.owera.xaps.dbi.*;
 import dto.UnitParameterDTO;
 import util.NotFoundException;
+
 import javax.validation.constraints.NotNull;
 import java.sql.SQLException;
+
 import static java.util.Collections.singletonList;
+
 import java.util.Optional;
 import java.util.function.Function;
+import static java.util.function.Function.*;
 
 import static util.LambdaExceptionUtil.*;
 
@@ -20,7 +24,7 @@ public class UnitParameterService {
 
     public UnitParameterDTO getUnitParameter(String uuid, String unitId, Integer paramId) throws SQLException {
         Unit unit = Optional.of(xapsLoader.getXAPSUnit(uuid))
-                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"))
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit is null"))
                 .getUnitById(unitId);
         return getUnitParameter(unit,
                 getUnittypeParameter(paramId, unit.getUnittype(), UnittypeParameter::getName),
@@ -29,7 +33,7 @@ public class UnitParameterService {
 
     public UnitParameterDTO[] getUnitParameters(String uuid, String unitId) throws SQLException {
         return Optional.of(xapsLoader.getXAPSUnit(uuid))
-                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"))
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit is null"))
                 .getUnitById(unitId)
                 .getUnitParameters()
                 .values()
@@ -40,9 +44,9 @@ public class UnitParameterService {
 
     public UnitParameterDTO createOrUpdateUnitParameter(String uuid, String unitId, UnitParameterDTO unitParameterDTO) throws SQLException {
         XAPSUnit xapsUnit = Optional.of(xapsLoader.getXAPSUnit(uuid))
-                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"));
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit is null"));
         Unit unit = Optional.ofNullable(xapsUnit.getUnitById(unitId))
-                .map(rethrowFunction(u -> u))
+                .map(identity())
                 .orElseThrow(() -> new NotFoundException("Unit " + unitId + " was not found"));
         return Optional.ofNullable(unit.getUnittype().getUnittypeParameters().getById(unitParameterDTO.getUnittypeParameterId()))
                 .map(rethrowFunction(unittypeParameter -> {
@@ -54,15 +58,17 @@ public class UnitParameterService {
 
     public Integer deleteUnitParameter(String uuid, String unitId, Integer paramId) throws SQLException {
         XAPSUnit xapsUnit = Optional.of(xapsLoader.getXAPSUnit(uuid))
-                .orElseThrow(() -> new IllegalStateException("XAPSUnit could not be created"));
+                .orElseThrow(() -> new IllegalStateException("XAPSUnit is null"));
         return Optional.ofNullable(xapsUnit.getUnitById(unitId))
-                .map(rethrowFunction(u -> xapsUnit.deleteUnitParameters(
-                        singletonList(getUnitParameter(u, getUnittypeParameter(paramId, u.getUnittype()))))))
+                .map(rethrowFunction(u -> xapsUnit.deleteUnitParameters(singletonList(
+                        getUnitParameter(u, getUnittypeParameter(paramId, u.getUnittype()))))))
                 .orElseThrow(() -> new NotFoundException("Unit " + unitId + " was not found"));
     }
 
-    private @NotNull UnittypeParameter getUnittypeParameter(Integer paramId, Unittype ut) {
-        return getUnittypeParameter(paramId, ut, utp -> utp);
+    private
+    @NotNull
+    UnittypeParameter getUnittypeParameter(Integer paramId, Unittype ut) {
+        return getUnittypeParameter(paramId, ut, identity());
     }
 
 
@@ -72,8 +78,10 @@ public class UnitParameterService {
                 .orElseThrow(() -> new NotFoundException("UnittypeParameter " + paramId + " does not exist"));
     }
 
-    private @NotNull UnitParameter getUnitParameter(Unit u, UnittypeParameter utp) {
-        return getUnitParameter(u, utp.getName(), up -> up);
+    private
+    @NotNull
+    UnitParameter getUnitParameter(Unit u, UnittypeParameter utp) {
+        return getUnitParameter(u, utp.getName(), identity());
     }
 
 
