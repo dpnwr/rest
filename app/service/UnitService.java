@@ -4,6 +4,7 @@ import cache.SessionCache;
 import com.google.inject.Singleton;
 import com.owera.xaps.dbi.*;
 import dto.UnitDTO;
+import util.NotFoundException;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -56,6 +57,6 @@ public class UnitService {
         XAPSUnit xapsUnit = getXapsUnit(xaps);
         return Optional.ofNullable(xapsUnit.getUnitById(id))
                 .map(rethrowFunction(xapsUnit::deleteUnit))
-                .orElseThrow(() -> new IllegalArgumentException("Unit " + id + " does not exist"));
+                .orElseThrow(() -> new NotFoundException("Unit " + id + " does not exist"));
     }
 }

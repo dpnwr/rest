@@ -4,6 +4,7 @@ import cache.SessionCache;
 import com.google.inject.Singleton;
 import com.owera.xaps.dbi.*;
 import dto.ProfileParameterDTO;
+import util.NotFoundException;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class ProfileParameterService {
                     profile.getProfileParameters().addOrChangeProfileParameter(profileParameter, xaps);
                     return new ProfileParameterDTO(profileParameter);
                 }))
-                .orElseThrow(() -> new IllegalArgumentException("Profile parameter " + param.getId() + " does not exist"));
+                .orElseThrow(() -> new NotFoundException("Profile parameter " + param.getId() + " does not exist"));
     }
 
     public void deleteProfileParameter(String uuid, Integer profileId, Integer paramId) {
